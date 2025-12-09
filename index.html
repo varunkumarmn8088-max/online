@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Registration Form</title>
+
+<!-- Simple CSS styling -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    label {
+        font-weight: bold;
+        margin-top: 15px;
+        display: block;
+    }
+    input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        background: #007bff;
+        border: none;
+        color: white;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #005dc2;
+    }
+    #previewBox {
+        display: none;
+        margin-top: 25px;
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Online Registration Form</h2>
+
+    <form id="regForm">
+        <label>Full Name</label>
+        <input type="text" id="fullname" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Phone</label>
+        <input type="text" id="phone">
+
+        <label>Gender</label>
+        <select id="gender">
+            <option>Select</option>
+            <option>Male</option>
+            <option>Female</option>
+        </select>
+
+        <label>Course</label>
+        <input type="text" id="course" required>
+
+        <label>Address</label>
+        <textarea id="address"></textarea>
+
+        <button type="submit">Submit & Download PDF</button>
+    </form>
+
+    <!-- Form preview -->
+    <div id="previewBox">
+        <h3>Application Preview</h3>
+        <p><b>Name:</b> <span id="p_name"></span></p>
+        <p><b>Email:</b> <span id="p_email"></span></p>
+        <p><b>Phone:</b> <span id="p_phone"></span></p>
+        <p><b>Gender:</b> <span id="p_gender"></span></p>
+        <p><b>Course:</b> <span id="p_course"></span></p>
+        <p><b>Address:</b> <span id="p_address"></span></p>
+
+        <button id="downloadPDF">Download PDF</button>
+    </div>
+</div>
+
+<!-- jsPDF + html2canvas (for PDF generation) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+document.getElementById("regForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    // Fill preview
+    document.getElementById("p_name").innerText = fullname.value;
+    document.getElementById("p_email").innerText = email.value;
+    document.getElementById("p_phone").innerText = phone.value;
+    document.getElementById("p_gender").innerText = gender.value;
+    document.getElementById("p_course").innerText = course.value;
+    document.getElementById("p_address").innerText = address.value;
+
+    // Show preview box
+    document.getElementById("previewBox").style.display = "block";
+});
+
+// Download PDF
+document.getElementById("downloadPDF").addEventListener("click", async function () {
+    const { jsPDF } = window.jspdf;
+
+    let pdf = new jsPDF("p", "pt", "a4");
+
+    await pdf.html(document.getElementById("previewBox"), {
+        callback: function (doc) {
+            doc.save("Application_Form.pdf");
+        },
+        x: 20,
+        y: 20
+    });
+});
+</script>
+
+</body>
+</html>
